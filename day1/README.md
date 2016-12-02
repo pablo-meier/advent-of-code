@@ -28,7 +28,7 @@
 
 ## How to run
 
-Make sure you have [SMLNJ][1] installed on your machine. Note that
+Make sure you have [MLton][1] installed on your machine. Note that
 
 `brew install mlton`
 
@@ -53,7 +53,9 @@ comrade][2] for going over how to even compile the damn language.
 
 Now I have to keep track of where I've been. That's not hard: I'll just pass
 another param in track which locations I've visited, and see if I've visited
-any before. I won't be doing this particularly efficiently…
+any before. I was originally thrown off by "places I've visited," though it
+was only where you landed, not walked by (didn't read the directions well)
+I won't be doing this particularly efficiently…
 
-   [1]: http://www.smlnj.org/
+   [1]: http://mlton.org/
    [2]: https://thebreakfastpost.com/2015/06/10/standard-ml-and-how-im-compiling-it/
