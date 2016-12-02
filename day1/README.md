@@ -38,6 +38,8 @@ works. Then
 
 ## Details
 
+### Part 1
+
 There are two parts of this: find out where you are compared to origin, then
 compute the fastest path there.
 
@@ -46,6 +48,12 @@ you traverse. Then sum the absolute values.
 
 I'll use SML since it's a basic problem and I missed it. Big ups to [this
 comrade][2] for going over how to even compile the damn language.
+
+### Part 2
+
+Now I have to keep track of where I've been. That's not hard: I'll just pass
+another param in track which locations I've visited, and see if I've visited
+any before. I won't be doing this particularly efficiently…
 
    [1]: http://www.smlnj.org/
    [2]: https://thebreakfastpost.com/2015/06/10/standard-ml-and-how-im-compiling-it/

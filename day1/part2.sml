@@ -1,12 +1,9 @@
-(* hello.sml *)
-
 datatype orientation = North | East | South | West
 datatype direction = Right | Left
 
 type instruction = (direction * int)
 type location = (int * int)
-type status = (orientation * location)
-
+type status = (orientation * location * location list list)
 
 fun turn(orient: orientation, d: direction): orientation =
   case (orient,d) of
@@ -20,23 +17,46 @@ fun turn(orient: orientation, d: direction): orientation =
      | (East, Left) => North
 
 
-fun move(orient: orientation, magnitude: int, l: location): location =
-  case (orient, l) of
-       (North, (x,y)) => (x, y + magnitude)
-     | (East, (x,y)) => (x + magnitude, y)
-     | (South,(x,y)) => (x, y - magnitude)
-     | (West, (x,y)) => (x - magnitude, y)
+fun move(orient: orientation,
+         magnitude: int,
+         l: location,
+         accum: location list): (location * location list) =
+  case magnitude of
+    0 => (l, List.rev(accum))
+    | _ => 
+      let 
+        val new_loc =  case (orient, l) of
+          (North, (x,y)) => (x, y + 1)
+        | (East, (x,y)) => (x + 1, y)
+        | (South,(x,y)) => (x, y - 1)
+        | (West, (x,y)) => (x - 1, y)
+      in
+        move(orient, magnitude - 1, new_loc, new_loc::accum)
+      end
 
 
 fun process_instruction(i: instruction, s: status): status =
   let
     val (direction, magnitude) = i
-    val (orient, loc) = s
+    val (orient, loc, visited) = s
     val new_orientation = turn(orient, direction)
-    val new_loc = move(new_orientation, magnitude, loc)
+    val (new_loc, accumed) = move(new_orientation, magnitude, loc, [])
   in
-    (new_orientation, new_loc)
+    (new_orientation, new_loc, accumed::visited)
   end
+
+
+fun in_list(_, []) = false
+  | in_list(x, h::t) =
+  case x = h of
+       true => true
+     | false => in_list(x,t)
+
+fun first_repeated([]) = (0,0)
+  | first_repeated(h::t) =
+  case in_list(h,t) of
+       true => h
+     | false => first_repeated(t)
 
 
 fun manhattan_distance((x,y): location): int =
@@ -45,16 +65,12 @@ fun manhattan_distance((x,y): location): int =
 
 fun process_list(loi : instruction list): int =
   let
-    val initial_status = (North, (0,0))
-    val (_, final_loc) = foldl(process_instruction)(initial_status)(loi)
+    val initial_status = (North, (0,0), [])
+    val (_, _, visited_locs) = foldl(process_instruction)(initial_status)(loi)
   in
-    manhattan_distance(final_loc)
+    manhattan_distance(first_repeated((0,0)::List.concat(List.rev(visited_locs))))
   end
 
-(* Read a file and return a list of instructions
-fun read_input(s: string): instruction list =
-  [(Right,3), (Right,3), (Left,1), (Right,2)]
- *)
 
 fun is_delimiter(#",") = true
   | is_delimiter(#" ") = true
