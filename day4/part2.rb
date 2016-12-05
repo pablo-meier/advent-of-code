@@ -1,4 +1,3 @@
-
 CHAR_MAP = {
   "A" => 1, "B" => 2, "C" => 3, "D" => 4, "E" => 5, "F" => 6, "G" => 7,
   "H" => 8, "I" => 9, "J" => 10, "K" => 11, "L" => 12, "M" => 13, "N" => 14,
@@ -42,32 +41,6 @@ class Code
             new_str << NUM_MAP[new_val]
         end
         new_str
-    end
-
-    def make_checksum()
-        char_hash = {}
-        @name.each_char do |c|
-            if c == "-" then next end
-            if char_hash.has_key?(c)
-                char_hash[c] = char_hash[c] + 1
-            else
-                char_hash[c] = 1
-            end
-        end
-        as_array = char_hash.to_a
-        by_magnitude = {}
-        as_array.each do |val|
-            if by_magnitude.has_key?(val[1])
-                by_magnitude[val[1]] << val[0]
-            else
-                by_magnitude[val[1]] = [val[0]]
-            end
-        end
-        as_array = by_magnitude.to_a
-        as_array.map { |elem| elem[1].sort! }
-        as_array.sort { |x,y| y[0] <=> x[0] }.map do |elem|
-            elem[1]
-        end.flatten()[0..4].join("")
     end
 end
 

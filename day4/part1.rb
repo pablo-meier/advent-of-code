@@ -1,4 +1,3 @@
-
 class Code
     attr_accessor :name, :id, :checksum
     def initialize(name, id, checksum)
@@ -43,7 +42,6 @@ class Code
             elem[1]
         end.flatten()[0..4].join("")
     end
-
 end
 
 
