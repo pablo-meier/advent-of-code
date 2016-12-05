@@ -48,5 +48,7 @@ are pretty speedy, I wonder how long we're gonna end up waiting.
 
 ### Part 2
 
+Mostly the same, we just have to go that much higher. Clever need to error check
+the string-to-int code.
 
   [1]: https://golang.org/

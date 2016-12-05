@@ -25,7 +25,8 @@ func main() {
         if allFives {
             position, err := strconv.Atoi(string(sum[5]))
             if err != nil {
-                //panic(err)
+                // Handle the case that the 'position' is a hex digit
+                // that doesn't parse cleanly
                 continue
             }
             newDigit := string(sum[6])
