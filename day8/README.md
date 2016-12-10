@@ -85,5 +85,6 @@ then implement the operations on that list. Have a print function.
 
 ### Part 2
 
+I mean, look at it.
 
   [1]: https://www.haskell.org/platform/
