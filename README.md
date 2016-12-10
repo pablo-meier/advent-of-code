@@ -12,12 +12,12 @@ Each day is done in a different language:
 * [Day 6](/day6): C ([impl](http://clang.llvm.org/), [description](https://en.wikipedia.org/wiki/C_(programming_language)))
 * [Day 7](/day7): Prolog ([impl](http://www.swi-prolog.org/), [description](https://en.wikipedia.org/wiki/Prolog))
 * [Day 8](/day8): Haskell ([impl](https://www.haskell.org/platform/), [description](https://en.wikipedia.org/wiki/Haskell_(programming_language)))
+* [Day 9](/day9): Erlang ([impl](https://www.erlang.org/), [description](https://en.wikipedia.org/wiki/Erlang_(programming_language))))
 
 Let's see if I can keep it up!
 
 ## Potential solutions in…
 
-* Erlang
 * Rust
 * Common Lisp
 * JavaScript
