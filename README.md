@@ -11,13 +11,13 @@ Each day is done in a different language:
 * [Day 5](/day5): Go ([impl](https://golang.org/), [description](https://en.wikipedia.org/wiki/Go_(programming_language)))
 * [Day 6](/day6): C ([impl](http://clang.llvm.org/), [description](https://en.wikipedia.org/wiki/C_(programming_language)))
 * [Day 7](/day7): Prolog ([impl](http://www.swi-prolog.org/), [description](https://en.wikipedia.org/wiki/Prolog))
+* [Day 8](/day8): Haskell ([impl](https://www.haskell.org/platform/), [description](https://en.wikipedia.org/wiki/Haskell_(programming_language)))
 
 Let's see if I can keep it up!
 
 ## Potential solutions in…
 
 * Erlang
-* Haskell
 * Rust
 * Common Lisp
 * JavaScript
@@ -28,6 +28,7 @@ Let's see if I can keep it up!
 * OCaml
 * Elixir
 * Idris
+* Swift
 * Smalltalk
 * Ada
 * Eiffel
