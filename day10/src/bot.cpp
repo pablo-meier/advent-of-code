@@ -1,6 +1,4 @@
 #include "bot.h"
-#include <iostream>
-using namespace std;
 
 #include "instructions.h"
 
@@ -72,12 +70,8 @@ Bot::checkWinCondition() {
 
 void
 Bot::safeSet(vector<uint16_t>* vec, uint16_t index, uint16_t value) {
-    cout << "SETTING " << index << " to " << value << endl;
     if (index > vec->size()) {
         vec->resize(index + 1);
-    }
-    if (index == 0 || index == 1 || index == 2) {
-        cout << "ZOMG ZOMG INDEX IS " << index << " AND VALUE IS " << value << endl;
     }
     (*vec)[index] = value;
 }

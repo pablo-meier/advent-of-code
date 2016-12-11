@@ -2,11 +2,12 @@
 
 CC=clang++
 CFLAGS=-Iinclude -std=c++11 -Wall -Werror
-EXEC=part1
+EXEC=botty_bots
 BUILD=build
 
 run: build
-	./$(BUILD)/$(EXEC)
+	./$(BUILD)/$(EXEC) --part1
+	./$(BUILD)/$(EXEC) --part2
 
 build: prepare
 	$(CC) $(CFLAGS) -c -o $(BUILD)/bot.o src/bot.cpp

@@ -9,10 +9,20 @@
 
 using namespace std;
 
-void attempt_to_give_out_chips(list<shared_ptr<GetInstruction>>*, map<uint16_t, shared_ptr<Bot>>*);
-bool attempt_bot_instructions(list<shared_ptr<GiveInstruction>>*, map<uint16_t, shared_ptr<Bot>>*, vector<uint16_t>*);
-shared_ptr<Bot> get_bot(uint16_t, map<uint16_t, shared_ptr<Bot>>*);
-bool check_output_chips(vector<uint16_t>*);
+void attempt_to_give_out_chips(list<shared_ptr<GetInstruction>>*,
+                               map<uint16_t, shared_ptr<Bot>>*);
+
+bool attempt_bot_instructions(list<shared_ptr<GiveInstruction>>*,
+                              map<uint16_t, shared_ptr<Bot>>*,
+                              vector<uint16_t>*,
+                              bool,
+                              bool);
+
+shared_ptr<Bot> get_bot(uint16_t,
+                        map<uint16_t,
+                        shared_ptr<Bot>>*);
+
+bool checkAlternateWinCondition(vector<uint16_t>*);
 
 
 /**
@@ -41,14 +51,23 @@ main(int argc, char** argv) {
 
     auto bots = map<uint16_t, shared_ptr<Bot>>();
     auto outputs = vector<uint16_t>();
+
+    bool isPart1 = false;
+    bool isPart2 = false;
+    if (strcmp(argv[1], "--part1") == 0) {
+        isPart1 = true;
+    } else if (strcmp(argv[1], "--part2") == 0) {
+        isPart2 = true;
+    } else {
+        cerr << "Must supply --part1 or --part2!" << endl;
+        exit(-1);
+    }
     
     while (true) {
         attempt_to_give_out_chips(&get_instructions, &bots);
-        bool isFinished = attempt_bot_instructions(&give_instructions, &bots, &outputs);
+        bool isFinished = attempt_bot_instructions(&give_instructions, &bots, &outputs, isPart1, isPart2);
         if (isFinished) break;
     }
-
-    cout << "Part 2: " << (outputs.at(0) * outputs.at(1) * outputs.at(2)) << endl;
 }
 
 
@@ -59,15 +78,10 @@ main(int argc, char** argv) {
  */
 void
 attempt_to_give_out_chips(list<shared_ptr<GetInstruction>>* gets, map<uint16_t, shared_ptr<Bot>>* bots) {
-    auto iter = gets->begin();
-    while (iter != gets->end()) {
-        auto curr_instruction = *iter;
+    for (auto curr_instruction : *gets) {
         auto bot = get_bot(curr_instruction->getBot(), bots);
         if (!bot->hasTwoChips()) {
             bot->accept(curr_instruction->getValue());
-            iter = gets->erase(iter);
-        } else {
-            ++iter;
         }
     }
 }
@@ -79,43 +93,52 @@ attempt_to_give_out_chips(list<shared_ptr<GetInstruction>>* gets, map<uint16_t, 
  * return false.
  */
 bool
-attempt_bot_instructions(list<shared_ptr<GiveInstruction>>* gives, map<uint16_t, shared_ptr<Bot>>* bots, vector<uint16_t>* outputs) {
+attempt_bot_instructions(
+        list<shared_ptr<GiveInstruction>>* gives,
+        map<uint16_t, shared_ptr<Bot>>* bots,
+        vector<uint16_t>* outputs,
+        bool isPart1,
+        bool isPart2) {
+
     if (gives->empty()) {
         cout << "We are out of instructions!" << endl;
         return true;
     }
     
-    auto iter = gives->begin();
-    while (iter != gives->end()) {
-        auto curr_instruction = *iter;
-        auto bot = get_bot(curr_instruction->getBot(), bots);
-        if (bot->hasTwoChips()) {
-            if (bot->checkWinCondition()) {
-                cout << "Part 1: " << bot->getId() << endl;
-                return true;
-            }
+    bool stuckState = false;
+    while (!stuckState) {
+        stuckState = true;
+        for (auto curr_instruction : *gives) {
+            auto bot = get_bot(curr_instruction->getBot(), bots);
+            if (bot->hasTwoChips()) {
+                stuckState = false;
+                if (bot->checkWinCondition() && isPart1) {
+                    cout << "Part 1: " << bot->getId() << endl;
+                    return true;
+                }
 
-            Target t1 = curr_instruction->getHighTarget();
-            Target t2 = curr_instruction->getLowTarget();
-            switch (t1.getType()) {
-                case TargetType::bot:
-                    if (t2.getType() == TargetType::output) {
-                        bot->give(get_bot(t1.getValue(), bots), outputs, t2.getValue());
-                    } else {
-                        bot->give(get_bot(t1.getValue(), bots), get_bot(t2.getValue(), bots));
-                    }
-                    break;
-                case TargetType::output:
-                    if (t2.getType() == TargetType::output) {
-                        bot->give(outputs, t1.getValue(), t2.getValue());
-                    } else {
-                        bot->give(outputs, t1.getValue(), get_bot(t2.getValue(), bots));
-                    }
-                    break;
+                Target t1 = curr_instruction->getHighTarget();
+                Target t2 = curr_instruction->getLowTarget();
+                switch (t1.getType()) {
+                    case TargetType::bot:
+                        if (t2.getType() == TargetType::output) {
+                            bot->give(get_bot(t1.getValue(), bots), outputs, t2.getValue());
+                        } else {
+                            bot->give(get_bot(t1.getValue(), bots), get_bot(t2.getValue(), bots));
+                        }
+                        break;
+                    case TargetType::output:
+                        if (t2.getType() == TargetType::output) {
+                            bot->give(outputs, t1.getValue(), t2.getValue());
+                        } else {
+                            bot->give(outputs, t1.getValue(), get_bot(t2.getValue(), bots));
+                        }
+                        break;
+                }
+                if (checkAlternateWinCondition(outputs) && isPart2) {
+                    return true;    
+                }
             }
-            iter = gives->erase(iter);
-        } else {
-            ++iter;
         }
     }
     return false;
@@ -136,3 +159,15 @@ get_bot(uint16_t botId, map<uint16_t, shared_ptr<Bot>>* bots) {
     return get<1>(*maybe_bot);
 }
 
+bool
+checkAlternateWinCondition(vector<uint16_t>* outputs) {
+    if (outputs->size() < 3) return false;
+    uint16_t first = outputs->at(0);
+    uint16_t second = outputs->at(1);
+    uint16_t third = outputs->at(2);
+    if (first != 0 && second != 0 & third != 0) {
+        cout << "Part 2: " << (first * second * third) << endl;
+        return true;
+    }
+    return false;
+}
