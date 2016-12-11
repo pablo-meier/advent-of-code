@@ -63,3 +63,5 @@ X goes to N bot` to whoever, then iterate through instructions to see if they're
 
 ## Part 2
 
+Change the win condition.
+
