@@ -14,15 +14,15 @@ Each day is done in a different language:
 * [Day 8](/day8): Haskell ([impl](https://www.haskell.org/platform/), [description](https://en.wikipedia.org/wiki/Haskell_(programming_language)))
 * [Day 9](/day9): Erlang ([impl](https://www.erlang.org/), [description](https://en.wikipedia.org/wiki/Erlang_(programming_language))))
 * [Day 10](/day10): C++ ([impl](http://clang.llvm.org/), [description](https://en.wikipedia.org/wiki/C%2B%2B))
+* [Day 11](/day11): Common Lisp ([impl](http://www.sbcl.org), [description](https://en.wikipedia.org/wiki/Common_Lisp))
+* [Day 12](/day12): Rust ([impl](), [description]())
+* [Day 13](/day13):
 
 Let's see if I can keep it up!
 
 ## Potential solutions in…
 
-* Rust
-* Common Lisp
 * JavaScript
-* C++
 * Java
 * Python
 * Scala
