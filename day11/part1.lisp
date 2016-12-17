@@ -220,7 +220,7 @@
          (new-states (make-moves-from curr-state))
 ;         (xx (format t "~%ADDITIONAL STATES:~%"))
 ;         (yy (mapcar #'print-state new-states))
-         (filtered (remove-if #'seen-before new-states))
+         (filtered (remove-if #'seen-before (remove-duplicates new-states :test #'(lambda (x y) (equalp (naked-state x) (naked-state y))))))
 ;         (xxx (format t "~%FILTERED STATES:~%"))
 ;         (yyy (mapcar #'print-state filtered))
 ;         (yyy (mapcar #'(lambda (x) (format t "~a~%" (naked-state x))) filtered))
