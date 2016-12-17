@@ -172,32 +172,29 @@
          (below (move-maker #'(lambda (x) (- x 1)) state)))
     (append above below)))
 
-(defun number-the-floors (floors hash curr)
-  (mapcar #'(lambda (floor)
-              (sort
+(defun floor-pairs (floors)
+  "This monstrosity: iterates through every floor. We set the floor number we're on
+  for every element, then filter out the chips. For every chip, we make a pair of
+  (chip-floor, generator-floor), then sort it into one flat list."
+  (let ((hash (make-hash-table))
+        (curr -1)
+        (keys '()))
+    (mapcar #'(lambda (floor)
+                (setf curr (+ 1 curr))
                 (mapcar #'(lambda (elem)
-                            (if (gethash elem hash)
-                                (gethash elem hash)
-                                (let ((generator-value (+ 1 curr))
-                                      (chip-value curr))
-                                  (setf curr (+ 2 curr))
-                                  (if (generatorp elem)
-                                    (let ()
-                                      (setf (gethash (its-microchip elem) hash) chip-value)
-                                      (setf (gethash elem hash) generator-value)
-                                      generator-value)
-                                    (let ()
-                                      (setf (gethash elem hash) chip-value)
-                                      (setf (gethash (its-generator elem) hash) generator-value)
-                                      chip-value))))) floor) #'<)) floors))
-                                    
+                            (setf (gethash elem hash) curr)
+                            (if (microchipp elem)
+                              (setf keys (cons elem keys)))) floor)) floors)
+    (sort (mapcar #'(lambda (chip) 
+                      (list (gethash chip hash) (gethash (its-generator chip) hash))) keys)
+          #'(lambda (x y) (and (< (car x) (car y))
+              (< (cadr x) (cadr y)))))))
 
 (defun naked-state (state)
   "Don't include the turn number for when we do equality checking, and stop isomorphic gen/microchip
-  checks. The 'encoding' we use for isomorphic gen/chip configs is that chips are odd numbers, gens
-  are even, and we pair them next to each other, as we find them, going up the floors. So
-  PROMETHIUM-CHIP / PROMETHIUM-GENERATOR would be (1,2) if the chip was on the first floor."
-  (list (state-floor state) (number-the-floors (state-floors state) (make-hash-table) 1)))
+  checks. The 'encoding' we use for isomorphic gen/chip configs is by converting each pair of chip/generator
+  as a list of pairs with their corresponding floor numbers."
+  (list (state-floor state) (floor-pairs (state-floors state))))
 
 (defun get-new-state ()
   (let* ((state (dequeue))
@@ -217,17 +214,17 @@
   "Pops off the top item of the queue, makes a gaggle of new states. Checks any of them for win conditions, if so,
   return that digit. Else, add to BFS and recurse."
   (let* ((curr-state (get-new-state))
-         (x (format t "!!!!!!!!!!!!!!!!!!~%NEW STATE:~%"))
-         (y (print-state curr-state))
+;         (x (format t "!!!!!!!!!!!!!!!!!!~%NEW STATE:~%"))
+;         (y (print-state curr-state))
          (x (format t "Turn: ~a~%" (state-turn curr-state)))
          (new-states (make-moves-from curr-state))
-         (xx (format t "~%ADDITIONAL STATES:~%"))
-         (yy (mapcar #'print-state new-states))
+;         (xx (format t "~%ADDITIONAL STATES:~%"))
+;         (yy (mapcar #'print-state new-states))
          (filtered (remove-if #'seen-before new-states))
-         (xxx (format t "~%FILTERED STATES:~%"))
-         (yyy (mapcar #'print-state filtered))
-         (yyy (mapcar #'(lambda (x) (format t "~a~%" (naked-state x))) filtered))
-         (yyy (format t "~%"))
+;         (xxx (format t "~%FILTERED STATES:~%"))
+;         (yyy (mapcar #'print-state filtered))
+;         (yyy (mapcar #'(lambda (x) (format t "~a~%" (naked-state x))) filtered))
+;         (yyy (format t "~%"))
          (checked-for-victory (mapcar #'win-condition-or-enqueue filtered))
          (this-round (ormap checked-for-victory)))
     (if this-round
@@ -237,7 +234,7 @@
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; For real logic
+; For real logic
 (enqueue *init-state*)
 
 (let ((num-steps (traverse)))
