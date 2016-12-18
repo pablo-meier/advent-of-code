@@ -208,7 +208,7 @@
 (defun print-state (state)
   (format t "  Turn: ~a~%" (state-turn state))
   (format t "  Floor: ~a~%" (state-floor state))
-  (format t "  ~{~a, ~}" (state-floors state)))
+  (format t "  ~{~a, ~}~%" (state-floors state)))
 
 (defun traverse ()
   "Pops off the top item of the queue, makes a gaggle of new states. Checks any of them for win conditions, if so,
@@ -216,7 +216,7 @@
   (let* ((curr-state (get-new-state))
 ;         (x (format t "!!!!!!!!!!!!!!!!!!~%NEW STATE:~%"))
 ;         (y (print-state curr-state))
-         (x (format t "Turn: ~a~%" (state-turn curr-state)))
+;         (x (format t "Turn: ~a~%" (state-turn curr-state)))
          (new-states (make-moves-from curr-state))
 ;         (xx (format t "~%ADDITIONAL STATES:~%"))
 ;         (yy (mapcar #'print-state new-states))

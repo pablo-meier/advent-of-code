@@ -187,7 +187,7 @@
 ## How to run
 
 I'm using [Steel Bank Common Lisp][1] for this (which, for Mac users, you can get with
-`brew install sbcl`. Then!
+`brew install sbcl`). Then!
 
 `make`
 
@@ -203,6 +203,5 @@ In any case, it's silly, but the best I got:
 * Stop on the "shallowest" solution.
 
 ## Part 2
-
 
    [1]: http://www.sbcl.org/
