@@ -16,6 +16,7 @@ Each day is done in a different language:
 * [Day 10](/day10): C++ ([impl](http://clang.llvm.org/), [description](https://en.wikipedia.org/wiki/C%2B%2B))
 * [Day 11](/day11): Common Lisp ([impl](http://www.sbcl.org), [description](https://en.wikipedia.org/wiki/Common_Lisp))
 * [Day 12](/day12): Rust ([impl](https://www.rust-lang.org), [description](https://en.wikipedia.org/wiki/Rust_(programming_language)))
+* [Day 13](/day13): Python ([impl](https://www.python.org/), [description](https://en.wikipedia.org/wiki/Python_(programming_language))))
 
 Let's see if I can keep it up!
 
@@ -23,8 +24,8 @@ Let's see if I can keep it up!
 
 * JavaScript
 * Java
-* Python
 * Scala
+* Pyret
 * OCaml
 * Elixir
 * Idris
