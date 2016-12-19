@@ -55,8 +55,8 @@ public class Main {
             // Java can be silly.
         }
 
-        this.fiveDigits = Pattern.compile(".+(\\w)\\1{4}.+");
-        this.threeDigits = Pattern.compile("^.+(\\w)\\1{2}.+$");
+        this.fiveDigits = Pattern.compile("(\\w)\\1{4}");
+        this.threeDigits = Pattern.compile(".*?(\\w)\\1{2}.*");
     }
 
     private String hashFor(long considered) {
@@ -77,11 +77,14 @@ public class Main {
         return String.format("%0" + (bytes.length << 1) + "X", bi);
     }
 
-    private Optional<String> fiveDigitMatches(String s) {
+    private Optional<List<String>> fiveDigitMatches(String s) {
         Matcher fiveDigitsMatches = this.fiveDigits.matcher(s);
-        boolean fiveDigitMatches = fiveDigitsMatches.matches();
-        if (fiveDigitMatches) return Optional.of(fiveDigitsMatches.group(1));
-        return Optional.empty();
+        ArrayList<String> chars = new ArrayList<>();
+        while (fiveDigitsMatches.find()) {
+            String thisChar = fiveDigitsMatches.group(1);
+            chars.add(thisChar);
+        }
+        return chars.isEmpty() ? Optional.empty() : Optional.of(chars);
     }
 
     private Optional<String> threeDigitMatches(String s) {
@@ -103,8 +106,7 @@ public class Main {
                 List<Long> forDigit = fiveDigitRepeats.get(repeatedDigit);
                 for (long repeater : forDigit) {
                     if (repeater < currChecking) continue;
-                    if (repeater < (currChecking + THREE_FIVES_INTERVAL)) {
-                        System.out.println("Adding " + currChecking + " (with hash \"" + hashFor(currChecking) + "\") after finding " + repeater + " with hash (\"" + hashFor(repeater) + "\")");
+                    if (repeater != currChecking && repeater < (currChecking + THREE_FIVES_INTERVAL)) {
                         keys.add(currChecking);
                         break;
                     }
@@ -113,19 +115,21 @@ public class Main {
 
             ++currChecking;
         }
-        System.out.println(keys.size());
         return keys.last();
     }
 
     private void considerInBulk(long bulk) {
         for (long j = maxConsidered; j < (maxConsidered + bulk); ++j) {
             String thisHash = hashFor(j);
-            Optional<String> fiveDigitMatches = fiveDigitMatches(thisHash);
+            Optional<List<String>> fiveDigitMatches = fiveDigitMatches(thisHash);
             Optional<String> threeDigitMatches = threeDigitMatches(thisHash);
             if (fiveDigitMatches.isPresent()) {
-                List<Long> forDigit = this.fiveDigitRepeats.get(fiveDigitMatches.get());
-                forDigit.add(j);
-            } else if (threeDigitMatches.isPresent()) {
+                for (String c : fiveDigitMatches.get()) {
+                    List<Long> forDigit = this.fiveDigitRepeats.get(c);
+                    forDigit.add(j);
+                }
+            }
+            if (threeDigitMatches.isPresent()) {
                 this.threeDigitRepeats.put(j, threeDigitMatches.get());
             }
         }
@@ -134,8 +138,8 @@ public class Main {
 
 
     public static void main(String[] args) {
-//        String puzzleInput = "ngcjuoqr";
-        String puzzleInput = "abc";
+        String puzzleInput = "ngcjuoqr";
+//        String puzzleInput = "abc";
         Main main = new Main(puzzleInput);
         long lastKey = main.solve();
         System.out.println(lastKey);
