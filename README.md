@@ -24,7 +24,6 @@ Let's see if I can keep it up!
 ## Potential solutions in…
 
 * JavaScript
-* Java
 * Scala
 * Pyret
 * OCaml
