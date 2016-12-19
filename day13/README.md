@@ -58,8 +58,6 @@
 > location, 1,1).
 > 
 > What is the fewest number of steps required for you to reach 31,39?
-> 
-> Your puzzle input is `1358`.
 
 ## Solution
 
