@@ -1,77 +1,108 @@
-# Day 15
+# Day 16
 
 ## Problem description
 
-> The halls open into an interior plaza containing a large kinetic sculpture. The
-> sculpture is in a sealed enclosure and seems to involve a set of identical
-> spherical capsules that are carried to the top and allowed to bounce through
-> the maze of spinning pieces.
+> You're done scanning this part of the network, but you've left traces of your
+> presence. You need to overwrite some disks with random-looking data to cover
+> your tracks and update the local security system with a new checksum for those
+> disks.
 > 
-> Part of the sculpture is even interactive! When a button is pressed, a capsule
-> is dropped and tries to fall through slots in a set of rotating discs to
-> finally go through a little hole at the bottom and come out of the sculpture.
-> If any of the slots aren't aligned with the capsule as it passes, the capsule
-> bounces off the disc and soars away. You feel compelled to get one of those
-> capsules.
+> For the data to not be suspicious, it needs to have certain properties; purely
+> random data will be detected as tampering. To generate appropriate random data,
+> you'll need to use a modified dragon curve.
 > 
-> The discs pause their motion each second and come in different sizes; they seem
-> to each have a fixed number of positions at which they stop. You decide to call
-> the position with the slot 0, and count up for each position it reaches next.
+> Start with an appropriate initial state (your puzzle input). Then, so long as
+> you don't have enough data yet to fill the disk, repeat the following steps:
 > 
-> Furthermore, the discs are spaced out so that after you push the button, one
-> second elapses before the first disc is reached, and one second elapses as the
-> capsule passes from one disc to the one below it. So, if you push the button at
-> time=100, then the capsule reaches the top disc at time=101, the second disc at
-> time=102, the third disc at time=103, and so on.
+> * Call the data you have at this point "a".
+> * Make a copy of "a"; call this copy "b".
+> * Reverse the order of the characters in "b".
+> * In "b", replace all instances of 0 with 1 and all 1s with 0.
+> * The resulting data is "a", then a single 0, then "b".
 > 
-> The button will only drop a capsule at an integer time - no fractional seconds
-> allowed.
+> For example, after a single step of this process,
 > 
-> For example, at time=0, suppose you see the following arrangement:
+> * `1` becomes `100`.
+> * `0` becomes `001`.
+> * `11111` becomes `11111000000`.
+> * `111100001010` becomes `1111000010100101011110000`.
 > 
-> * Disc #1 has 5 positions; at time=0, it is at position 4.
-> * Disc #2 has 2 positions; at time=0, it is at position 1.
->
-> If you press the button exactly at time=0, the capsule would start to fall; it
-> would reach the first disc at time=1. Since the first disc was at position 4 at
-> time=0, by time=1 it has ticked one position forward. As a five-position disc,
-> the next position is 0, and the capsule falls through the slot.
+> Repeat these steps until you have enough data to fill the desired disk.
 > 
-> Then, at time=2, the capsule reaches the second disc. The second disc has
-> ticked forward two positions at this point: it started at position 1, then
-> continued to position 0, and finally ended up at position 1 again. Because
-> there's only a slot at position 0, the capsule bounces away.
+> Once the data has been generated, you also need to create a checksum of that
+> data. Calculate the checksum only for the data that fits on the disk, even if
+> you generated more data than that in the previous step.
 > 
-> If, however, you wait until time=5 to push the button, then when the capsule
-> reaches each disc, the first disc will have ticked forward 5+1 = 6 times (to
-> position 0), and the second disc will have ticked forward 5+2 = 7 times (also
-> to position 0). In this case, the capsule would fall through the discs and come
-> out of the machine.
+> The checksum for some given data is created by considering each non-overlapping
+> pair of characters in the input data. If the two characters match (00 or 11),
+> the next checksum character is a 1. If the characters do not match (01 or 10),
+> the next checksum character is a 0. This should produce a new string which is
+> exactly half as long as the original. If the length of the checksum is even,
+> repeat the process until you end up with a checksum with an odd length.
 > 
-> However, your situation has more than two discs; you've noted their positions
-> in your puzzle input. What is the first time you can press the button to get a
-> capsule?
+> For example, suppose we want to fill a disk of length 12, and when we finally
+> generate a string of at least length 12, the first 12 characters are
+> `110010110100`. To generate its checksum:
+> 
+> * Consider each pair: 11, 00, 10, 11, 01, 00.
+> * These are same, same, different, same, different, same, producing 110101.
+> * The resulting string has length 6, which is even, so we repeat the process.
+> * The pairs are 11 (same), 01 (different), 01 (different).
+> * This produces the checksum 100, which has an odd length, so we stop.
+> 
+> Therefore, the checksum for 110010110100 is 100.
+> 
+> Combining all of these steps together, suppose you want to fill a disk of length
+> 20 using an initial state of 10000:
+> 
+> * Because 10000 is too short, we first use the modified dragon curve to make it
+>   longer.
+> * After one round, it becomes 10000011110 (11 characters), still too short.
+> * After two rounds, it becomes 10000011110010000111110 (23 characters), which
+>   is enough.
+> * Since we only need 20, but we have 23, we get rid of all but the first 20
+>   characters: 10000011110010000111.
+> * Next, we start calculating the checksum; after one round, we have 0111110101,
+>   which 10 characters long (even), so we continue.
+> * After two rounds, we have 01100, which is 5 characters long (odd), so we are
+>   done.
+> 
+> In this example, the correct checksum would therefore be 01100.
+> 
+> The first disk you have to fill has length 272. Using the initial state in your
+> puzzle input, what is the correct checksum?
 
 ## Solution
 
 ## How to run
 
-Ensure you have `node` on your machine (you might want
-[nvm](https://github.com/creationix/nvm)), then
+So, this was a departure! I tried using the new up-and-comer, [Pyret][1], and
+developed Part 1 in the [online editor][2]. Part 2, however, blew Node's memory
+limits, even when run locally (which, if you [read how to on the GitHub repo][3],
+isn't totally trivial…). I even [increased Node's memory to 4GB][4] and still
+blew it, so…
+
+I re-wrote it in OCaml. You know what's cool? Many of the functions in [OCaml's
+Lists][5] aren't tail recursive and will blow your stack! Cooooooooooool. There's
+totally a good reason why that must be the case, he said out loud.
+
+Ensure you have `ocamlopt` on your machine, then
 
 `make`
 
 ## Part 1
 
-Take every disk, starting position, number of positions. Then step a "clock"
-over and over again, each tick:
-
-* Advancing the capsule
-* Checking the position of every disc.
-
-If you get through them all, Yahtzee.
+Naive: do the things it describes.
 
 ## Part 2
 
-Same, just add another disc (and wait considerably longer 😝)
+Same, just re-write standard library functions in a compiled language 😛
 
+(there's probably a think-ey way to be smarter about this, but I didn't feel
+like doing it).
+
+   [1]: https://www.pyret.org/
+   [2]: https://code.pyret.org/editor
+   [3]: https://github.com/brownplt/pyret-lang#running-pyret
+   [4]: http://prestonparry.com/articles/IncreaseNodeJSMemorySize/
+   [5]: https://caml.inria.fr/pub/docs/manual-ocaml/libref/List.html
