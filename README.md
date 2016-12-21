@@ -26,7 +26,6 @@ Let's see if I can keep it up!
 ## Potential solutions in…
 
 * Scala
-* Pyret
 * F#
 * Idris
 * Swift
