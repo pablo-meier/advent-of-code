@@ -20,12 +20,12 @@ Each day is done in a different language:
 * [Day 14](/day14): Java ([impl](https://www.java.com/en/), [description](https://en.wikipedia.org/wiki/Java_(programming_language)))
 * [Day 15](/day15): JavaScript ([impl](https://nodejs.org/en/), [description](https://en.wikipedia.org/wiki/JavaScript))
 * [Day 16](/day16): Pyret ([website](https://www.pyret.org/)) and OCaml ([impl](http://www.ocaml.org/)), [description](https://en.wikipedia.org/wiki/OCaml))
+* [Day 17](/day17): Scala ([impl](https://www.scala-lang.org/)), [description](https://en.wikipedia.org/wiki/Scala_(programming_language)))
 
 Let's see if I can keep it up!
 
 ## Potential solutions in…
 
-* Scala
 * F#
 * Idris
 * Swift
