@@ -5,62 +5,56 @@
 :- pred main(io::di, io::uo) is det.
 
 :- implementation.
-:- import_module int, list, maybe.
+:- import_module int, list.
 :- type elf_with_gifts ---> elf(id::int, num_presents::int).
 
 
+:- pred elf_gift_sequence_upward(int::in, int::in, list(elf_with_gifts)::out) is det.
+elf_gift_sequence_upward(Curr, Target, Lst) :-
+  (Curr > Target -> Lst = []);
+  elf_gift_sequence_upward(Curr + 1, Target, Tail),
+  Lst = [elf(Curr, 1)|Tail].
 
 :- pred elf_gift_sequence(int::in, list(elf_with_gifts)::out) is det.
-elf_gift_sequence(Num, Lst) :-
-  (Num = 0 -> Lst = []);
-  elf_gift_sequence(Num - 1, Tail),
-  Lst = [elf(Num, 1)|Tail].
+elf_gift_sequence(Target, Lst) :-
+  elf_gift_sequence_upward(1, Target, Lst).
 
-
-:- pred elfswap(elf_with_gifts::in, elf_with_gifts::in, maybe(elf_with_gifts)::out) is det.
-elfswap(elf(Id1, NumItems1), elf(_, NumItems2), Resp) :-
-  (NumItems1 = 0 -> Resp = no);
-  Resp = yes(elf(Id1, NumItems1 + NumItems2)).
+:- pred elfswap(elf_with_gifts::in, elf_with_gifts::in, elf_with_gifts::out) is det.
+elfswap(elf(Id1, NumItems1), elf(_, NumItems2), elf(Id1, NumItems1 + NumItems2)).
 
 
 %% This is the meat, right here. 4 Params:
-%%   First is the first element of the initial list after they've made their move. They
-%%   are needed to simulate a circular list when the second param has one element left.
+%%   First is the "processing" list. We go through it in pairs, handing off leftsies.
 %%
-%%   Second is the "processing" list. We go through it in pairs, handing off leftsies.
+%%   Second is the result list. We inspect to determine when to do another "round"
 %%
-%%   Third is the result list. We inspect to determine when to do another "round"
-%%
-%%   Fourth is the final result.
+%%   Third is the final result.
 
 %% Terminate when the third element consists of one elf, and set the output to it.
-:- pred consolidated_intermediate(elf_with_gifts::in, list(elf_with_gifts)::in, list(elf_with_gifts)::in, elf_with_gifts::out) is semidet.
-consolidated_intermediate(_, [], [X|[]], X).
+:- pred consolidated_intermediate(list(elf_with_gifts)::in, list(elf_with_gifts)::in, elf_with_gifts::out) is semidet.
+consolidated_intermediate([], [X|[]], X).
 
 %% When the third element has many items and the second is out, "loop"
-consolidated_intermediate(_, [], [X,Y|T], End) :-
-  (elfswap(X, Y, yes(NewFirstElf)) ->
-   consolidated_intermediate(NewFirstElf, T, [NewFirstElf], End));
-  consolidated_intermediate(Y, T, [Y], End).
+consolidated_intermediate([], [A,B|C], End) :-
+  reverse([A,B|C], [X,Y|T]),
+  consolidated_intermediate([X,Y|T], [], End).
 
-%% If we're at the last element of the processing list, compare to the first
-consolidated_intermediate(Y, [X|[]], Accum, End) :-
-  (elfswap(X, Y, yes(Winner)) ->
-   consolidated_intermediate(Winner, [], [Winner|Accum], End));
-  consolidated_intermediate(Y, [], Accum, End).
+%% If we're at the last element of the processing list, maybe compare to the first, drp if 0.
+consolidated_intermediate([elf(Id, NumItems)|[]], [A|B], End) :-
+  reverse([A|B], [X|T]),
+  (NumItems = 0 -> consolidated_intermediate([X|T], [], End);
+   elfswap(elf(Id, NumItems), X, Winner),
+   consolidated_intermediate(T, [Winner], End)).
 
 %% General case: Compare the two adjacents in processing list.
-consolidated_intermediate(First, [X,Y|Tail], Accum, End) :-
-  (elfswap(X,Y, yes(NewWinner)) ->
-   consolidated_intermediate(First, Tail, [NewWinner|Accum], End));
-  Skipped = [Y|Tail],
-  consolidated_intermediate(First, Skipped, Accum, End).
+consolidated_intermediate([X,Y|Tail], Accum, End) :-
+  elfswap(X, Y, NewWinner),
+  consolidated_intermediate(Tail, [NewWinner|Accum], End).
 
 
 :- pred consolidated(list(elf_with_gifts)::in, elf_with_gifts::out) is semidet.
-consolidated([X,Y|T], Output) :-
-  elfswap(X, Y, yes(NewFirstElf)),
-  consolidated_intermediate(NewFirstElf, T, [NewFirstElf], Output).
+consolidated(Input, Output) :-
+  consolidated_intermediate(Input, [], Output).
 
 
 :- pred elf_white_elephant(int::in, int::out) is semidet.
@@ -71,8 +65,8 @@ elf_white_elephant(NumElves, Winner) :-
 
 
 main(!IO) :-
-  (elf_white_elephant(5, X) ->
+  (elf_white_elephant(3, X) ->
    io.write_string("Winner is: ", !IO),
-   io.write_int(X, !IO),
+   io.print(X, !IO),
    io.write_string("\n", !IO));
-  io.write_string("We failed, boys.", !IO).
+  io.write_string("We failed, comrades.", !IO).
