@@ -42,7 +42,17 @@ Ensure you have the Mercury compiler `mmc` on your machine, then
 
 ## Part 1
 
+This… took a bit more work than I anticipated. Turns out logic programming
+with extra restrictions is extra hard!
+
+The approach is simple: simulate traversal of a circular list, and keep
+passing the presents from one to the next in succession until there is one left.
+Took a while to get determinism qualifiers/checks in place, but eventually got
+it.
 
 ## Part 2
 
+Now for the juicy part. To even do this in the naive way (which, let's be real,
+I'm going to try) you need a much more general/programmable circular list
+(before I was just embedding the "cicularness" in the clauses.
 

@@ -1,4 +1,4 @@
-:- module advent.
+:- module advent1.
 :- interface.
 :- import_module io.
 
@@ -9,15 +9,14 @@
 :- type elf_with_gifts ---> elf(id::int, num_presents::int).
 
 
-:- pred elf_gift_sequence_upward(int::in, int::in, list(elf_with_gifts)::out) is det.
-elf_gift_sequence_upward(Curr, Target, Lst) :-
-  (Curr > Target -> Lst = []);
-  elf_gift_sequence_upward(Curr + 1, Target, Tail),
-  Lst = [elf(Curr, 1)|Tail].
+:- pred elf_gift_sequence_upward(int::in, list(elf_with_gifts)::in, list(elf_with_gifts)::out) is det.
+elf_gift_sequence_upward(Curr, Accum, Lst) :-
+  (Curr = 0 -> Accum = Lst);
+  elf_gift_sequence_upward(Curr - 1, [elf(Curr, 1)|Accum], Lst).
 
 :- pred elf_gift_sequence(int::in, list(elf_with_gifts)::out) is det.
 elf_gift_sequence(Target, Lst) :-
-  elf_gift_sequence_upward(1, Target, Lst).
+  elf_gift_sequence_upward(Target, [], Lst).
 
 :- pred elfswap(elf_with_gifts::in, elf_with_gifts::in, elf_with_gifts::out) is det.
 elfswap(elf(Id1, NumItems1), elf(_, NumItems2), elf(Id1, NumItems1 + NumItems2)).
@@ -65,7 +64,7 @@ elf_white_elephant(NumElves, Winner) :-
 
 
 main(!IO) :-
-  (elf_white_elephant(3, X) ->
+  (elf_white_elephant(3004953, X) ->
    io.write_string("Winner is: ", !IO),
    io.print(X, !IO),
    io.write_string("\n", !IO));

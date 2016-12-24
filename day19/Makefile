@@ -1,10 +1,12 @@
 
 
 run: build
-	./advent
+	./advent1
+	./advent2
 
 build:
-	mmc --make advent
+	mmc --make advent1
+	mmc --make advent2
 
 clean:
-	rm -rf ./advent advent.err advent.mh Mercury
+	rm -rf ./advent1 ./advent2 *.err *.mh Mercury
