@@ -24,6 +24,7 @@ Each day is done in a different language:
 * [Day 18](/day18): Elixir ([impl](http://elixir-lang.org), [description](https://en.wikipedia.org/wiki/Elixir_(programming_language)))
 * [Day 19](/day19): Mercury ([impl](https://mercurylang.org), [description](https://en.wikipedia.org/wiki/Mercury_(programming_language))))
 * [Day 20](/day20): Clojure ([impl](https://clojure.org/), [description](https://en.wikipedia.org/wiki/Clojure)) 
+* [Day 21](/day21): Lua ([impl](https://www.lua.org/), [description](https://en.wikipedia.org/wiki/Lua_(programming_language)))
 
 Let's see if I can keep it up!
 

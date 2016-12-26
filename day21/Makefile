@@ -1,0 +1,5 @@
+
+
+run:
+	lua advent.lua
+
