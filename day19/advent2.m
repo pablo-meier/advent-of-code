@@ -102,7 +102,8 @@ elf_white_elephant(NumElves, Winner) :-
 
 
 main(!IO) :-
-  (elf_white_elephant(3004953, X) ->
+%  (elf_white_elephant(3004953, X) ->
+  (elf_white_elephant(20000, X) ->
 %  (elf_white_elephant(5, X) ->
 %  (elf_gift_sequence(5, L), across_circle_index(5, Across), circular_list_nth_and_remove(L, Across, NL, Elt), cycle_to_replace(NL, elf(1,1), FinalTail), elfswap(elf(1,1), Elt, NewElf), circular_list_addback(NewElf,FinalTail,OneIteration), across_circle_index(4, A2), circular_list_nth_and_remove(OneIteration, A2, NL2, Elt2), cycle_to_replace(NL2, elf(2,1), FT2), elfswap(elf(2,1), Elt2, NE2), circular_list_addback(NE2, FT2, TwoIterations), across_circle_index(3, X) ->
    io.write_string("Winner is: ", !IO),

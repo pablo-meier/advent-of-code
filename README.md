@@ -22,6 +22,8 @@ Each day is done in a different language:
 * [Day 16](/day16): Pyret ([website](https://www.pyret.org/)) and OCaml ([impl](http://www.ocaml.org/)), [description](https://en.wikipedia.org/wiki/OCaml))
 * [Day 17](/day17): Scala ([impl](https://www.scala-lang.org/)), [description](https://en.wikipedia.org/wiki/Scala_(programming_language)))
 * [Day 18](/day18): Elixir ([impl](http://elixir-lang.org), [description](https://en.wikipedia.org/wiki/Elixir_(programming_language)))
+* [Day 19](/day19): Mercury ([impl](https://mercurylang.org), [description](https://en.wikipedia.org/wiki/Mercury_(programming_language))))
+* [Day 20](/day20): Clojure ([impl](https://clojure.org/), [description](https://en.wikipedia.org/wiki/Clojure)) 
 
 Let's see if I can keep it up!
 
@@ -29,21 +31,31 @@ Let's see if I can keep it up!
 
 * F#
 * Idris
-* Swift
-* Smalltalk
-* Ada
 * Nim
+* Crystal
+* Smalltalk
+* Swift
+* Ada
+* FORTRAN
+* COBOL
 * Eiffel
-* Self
 * Io
+* Self
 * Kotlin
 * Elm
 * PHP
 * Shen
 * Pure
+* J
 * Orc
 
 Suggestions welcome!
+
+## TODOs
+
+* Ideally, blog a bit about this project and the languages.
+* Ensure we use stdin/file input wherever possible, rather than hard code the puzzle inputs.
+* More idiomatic refactors of many of the later ones, not just "You can code Scheme in any language."
 
    [1]: http://adventofcode.com/
    [2]: https://github.com/philiphwang
